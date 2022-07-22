@@ -62,3 +62,14 @@ def get_note_type(coll: collection.Collection, note_type: str) -> Optional[Dict[
         if x['name'] == note_type:
             return x
     return None
+
+
+def add_note(coll: collection.Collection, deck_name: str, note_type_name: str):
+    deck = get_deck(coll, deck_name)
+    assert deck is not None
+    note_type = get_note_type(coll, note_type_name)
+    assert note_type is not None
+    new_note = coll.new_note(note_type)
+    coll.add_note(new_note, deck['id'])
+    coll.db.commit()
+    return new_note
