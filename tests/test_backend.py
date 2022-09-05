@@ -3,8 +3,10 @@ from pathlib import Path
 from pytest import fixture
 from autoanki import backend
 
+
 ANKI_PATH = Path(__file__).parent / 'fake_anki'
 ANKI_REF = ANKI_PATH / 'User 1' / 'collection.bak'
+
 
 def test_coll():
     coll = backend.get_collection('User 1', base_path=ANKI_PATH)
@@ -20,7 +22,7 @@ def test_get_note_type():
     note_type = backend.get_note_type(coll, 'Basic')
 
 
-def test_add_card():
+def test_add_note():
     coll = backend.get_collection('User 1', base_path=ANKI_PATH)
     new_note = backend.add_note(coll, 'Default', 'Basic')
     all_notes = coll.find_notes('')
