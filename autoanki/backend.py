@@ -1,15 +1,20 @@
 from __future__ import annotations
 import anki
 
-from anki import collection, notes
+from anki import collection, notes, decks
 from os import environ
 from pathlib import Path
 from typing import Any, List, Optional, Tuple, Dict, TypedDict
 from autoanki import config
 
 
+OPEN_COLLS = {
+
+}
+
+
 class DeckDict(TypedDict):
-    id: int
+    id: decks.DeckId
     mod: int
     name: str
     usn: int
@@ -46,8 +51,14 @@ def all_notes(coll):
 
 def get_collection(user_name: str, anki_path: Path=config.ANKI_PATH) -> collection.Collection:
     """Get a user's collection"""
+    global OPEN_COLLS
     anki_path = anki_path / user_name / 'collection.anki2'
-    return collection.Collection(str(anki_path))
+    if anki_path in OPEN_COLLS:
+        return OPEN_COLLS[anki_path]
+    else:
+        coll = collection.Collection(str(anki_path))
+        OPEN_COLLS[anki_path] = coll
+        return coll
 
 
 def get_deck(coll: collection.Collection, name: str) -> DeckDict:
@@ -70,6 +81,13 @@ def get_note_type(coll: collection.Collection, note_type: str) -> Optional[Dict[
         if x['name'] == note_type:
             return x
     return None
+
+
+def blank_note(coll: collection.Collection, note_type_name: str):
+    note_type = get_note_type(coll, note_type_name)
+    assert note_type is not None
+    new_note = coll.new_note(note_type)
+    return new_note
 
 
 def add_note(coll: collection.Collection, deck_name: str, note_type_name: str):
