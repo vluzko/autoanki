@@ -12,7 +12,7 @@ class Deck:
     def get_field_all(self, field: int):
         return [x.fields[field] for x in self.cards]
 
-    def update_cards(self, notes):
+    def update_notes(self, notes):
         assert self._collection.db is not None
         for note in notes:
             self._collection.update_note(note)

@@ -24,31 +24,6 @@ class DeckDict(TypedDict):
     mid: int
 
 
-def add_deck(coll: collection.Collection, deck_name: str):
-    coll.decks.add_normal_deck_with_name(deck_name)
-    coll.db.commit()  # type: ignore
-
-
-def list_decks(coll: collection.Collection):
-    for deck in coll.decks.all_names_and_ids():
-        print(deck.name)
-
-
-def add_note_to_deck(coll: collection.Collection, note, deck_id):
-    coll.add_note(note, deck_id)
-    coll.db.commit()  # type: ignore
-
-
-def all_note_ids(coll):
-    return coll.find_notes('')
-
-
-def all_notes(coll):
-    ids = all_note_ids(coll)
-    notes = [coll.get_note(x) for x in ids]
-    return notes
-
-
 def get_collection(user_name: str, anki_path: Path=config.ANKI_PATH) -> collection.Collection:
     """Get a user's collection"""
     global OPEN_COLLS
@@ -61,6 +36,38 @@ def get_collection(user_name: str, anki_path: Path=config.ANKI_PATH) -> collecti
         return coll
 
 
+def add_deck(coll: collection.Collection, deck_name: str):
+    """Add a deck to a collection"""
+    coll.decks.add_normal_deck_with_name(deck_name)
+    coll.db.commit()  # type: ignore
+    raise NotImplementedError
+    # TODO: Return the deck
+
+
+def all_decks(coll: collection.Collection) -> Dict[decks.DeckId, DeckDict]:
+    raise NotImplementedError
+
+
+def all_note_ids(coll):
+    return coll.find_notes('')
+
+
+def all_notes(coll):
+    ids = all_note_ids(coll)
+    notes = [coll.get_note(x) for x in ids]
+    return notes
+
+
+def list_decks(coll: collection.Collection):
+    for deck in coll.decks.all_names_and_ids():
+        print(deck.name)
+
+
+def add_note_to_deck(coll: collection.Collection, note, deck_id):
+    coll.add_note(note, deck_id)
+    coll.db.commit()  # type: ignore
+
+
 def get_deck(coll: collection.Collection, name: str) -> DeckDict:
     """Get data for a particular deck"""
     for x in coll.decks.all_names_and_ids():
@@ -69,9 +76,9 @@ def get_deck(coll: collection.Collection, name: str) -> DeckDict:
     raise ValueError('Deck not found')
 
 
-def get_deck_notes(coll: collection.Collection, deck) -> List[notes.Note]:
-    notes = all_notes(coll)
-    deck_notes = [x for x in notes if x.mid == deck['mid']]
+def get_deck_notes(coll: collection.Collection, deck: DeckDict) -> List[notes.Note]:
+    deck_note_ids = coll.find_notes('deck:"{}"'.format(deck['name']))
+    deck_notes = [coll.get_note(x) for x in deck_note_ids]
     return deck_notes
 
 
@@ -100,3 +107,15 @@ def add_note(coll: collection.Collection, deck_name: str, note_type_name: str):
     assert coll.db is not None
     coll.db.commit()
     return new_note
+
+
+def new_note_type(coll: collection.Collection, name: str, fields: List[str]):
+    raise NotImplementedError
+
+
+def new_card(coll: collection.Collection, note_type: str):
+    raise NotImplementedError
+
+
+def add_media(coll: collection.Collection):
+    raise NotImplementedError
