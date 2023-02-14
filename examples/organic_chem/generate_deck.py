@@ -15,6 +15,7 @@ def scrape_page():
     url = "https://chem.libretexts.org/Ancillary_Materials/Reference/Organic_Chemistry_Glossary"
     page = requests.get(url)
     import pdb
+
     pdb.set_trace()
     raise NotImplementedError
 

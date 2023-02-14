@@ -22,7 +22,7 @@ class Deck:
         raise NotImplementedError
 
     def add_card(self, card):
-        self._collection.add_note(card, self._deck['id'])
+        self._collection.add_note(card, self._deck["id"])
         assert self._collection.db is not None
         self._collection.db.commit()
 
@@ -33,7 +33,9 @@ class Deck:
         raise NotImplementedError
 
 
-def blank_note(note_type: str, user_name: str='Main', anki_path=config.ANKI_PATH) -> backend.notes.Note:
+def blank_note(
+    note_type: str, user_name: str = "Main", anki_path=config.ANKI_PATH
+) -> backend.notes.Note:
     collection = backend.get_collection(user_name, anki_path=anki_path)
     return backend.blank_note(collection, note_type)
 
@@ -46,7 +48,9 @@ def create_deck_from_iterator(deck_name, note_type, note_data):
     raise NotImplementedError
 
 
-def load_deck(deck_name: str, user_name: str='Main', anki_path=config.ANKI_PATH) -> Deck:
+def load_deck(
+    deck_name: str, user_name: str = "Main", anki_path=config.ANKI_PATH
+) -> Deck:
     collection = backend.get_collection(user_name, anki_path=anki_path)
     deck = backend.get_deck(collection, deck_name)
     cards = backend.get_deck_notes(collection, deck)

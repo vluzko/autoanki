@@ -3,7 +3,7 @@ import pandas as pd
 from pathlib import Path
 
 
-cache = Path(__file__).parent / '.cache'
+cache = Path(__file__).parent / ".cache"
 cache.mkdir(exist_ok=True)
 
 
@@ -12,7 +12,7 @@ def build_note_type():
 
 
 def build_note(s_name: str, c_name: str, level: str):
-    blank_note = create.blank_note('Bird')
+    blank_note = create.blank_note("Bird")
     blank_note.fields[0] = c_name
     blank_note.fields[1] = s_name
     blank_note.fields[2] = level
@@ -20,8 +20,8 @@ def build_note(s_name: str, c_name: str, level: str):
 
 
 def parse_index_page(region: str):
-    url = f'https://ebird.org/region/{region}?yr=all'
-    cached = cache / 'index'
+    url = f"https://ebird.org/region/{region}?yr=all"
+    cached = cache / "index"
     if cached.exists():
         content = cached.read_text()
     else:
@@ -29,11 +29,11 @@ def parse_index_page(region: str):
         content = page.content
         cached.write_bytes(content)
 
-    parsed = bs4.BeautifulSoup(content, features='html.parser')
-    observations = parsed.findAll('div', {'id': 'place-species-observed-results'})
+    parsed = bs4.BeautifulSoup(content, features="html.parser")
+    observations = parsed.findAll("div", {"id": "place-species-observed-results"})
     assert len(observations) == 1
     observations = observations[0]
-    sections = observations.findAll('section')
+    sections = observations.findAll("section")
     name_codes = []
     # for i, section in enumerate(sections):
     #     link = section.find('a')
@@ -44,9 +44,9 @@ def parse_index_page(region: str):
 
 
 def build_all_notes():
-    deck = create.new_deck('Birds of Peru')
+    deck = create.new_deck("Birds of Peru")
     note_type = build_note_type()
-    page = parse_index_page('PE')
+    page = parse_index_page("PE")
 
     # Build cards
     # Add cards to deck

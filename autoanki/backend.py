@@ -8,9 +8,7 @@ from typing import Any, List, Optional, Tuple, Dict, TypedDict
 from autoanki import config
 
 
-OPEN_COLLS = {
-
-}
+OPEN_COLLS = {}
 
 
 class DeckDict(TypedDict):
@@ -24,10 +22,12 @@ class DeckDict(TypedDict):
     mid: int
 
 
-def get_collection(user_name: str, anki_path: Path=config.ANKI_PATH) -> collection.Collection:
+def get_collection(
+    user_name: str, anki_path: Path = config.ANKI_PATH
+) -> collection.Collection:
     """Get a user's collection"""
     global OPEN_COLLS
-    anki_path = anki_path / user_name / 'collection.anki2'
+    anki_path = anki_path / user_name / "collection.anki2"
     if anki_path in OPEN_COLLS:
         return OPEN_COLLS[anki_path]
     else:
@@ -49,7 +49,7 @@ def all_decks(coll: collection.Collection) -> Dict[decks.DeckId, DeckDict]:
 
 
 def all_note_ids(coll):
-    return coll.find_notes('')
+    return coll.find_notes("")
 
 
 def all_notes(coll):
@@ -73,19 +73,21 @@ def get_deck(coll: collection.Collection, name: str) -> DeckDict:
     for x in coll.decks.all_names_and_ids():
         if x.name == name:
             return coll.decks.get(x.id)  # type: ignore
-    raise ValueError('Deck not found')
+    raise ValueError("Deck not found")
 
 
 def get_deck_notes(coll: collection.Collection, deck: DeckDict) -> List[notes.Note]:
-    deck_note_ids = coll.find_notes('deck:"{}"'.format(deck['name']))
+    deck_note_ids = coll.find_notes('deck:"{}"'.format(deck["name"]))
     deck_notes = [coll.get_note(x) for x in deck_note_ids]
     return deck_notes
 
 
-def get_note_type(coll: collection.Collection, note_type: str) -> Optional[Dict[str, Any]]:
+def get_note_type(
+    coll: collection.Collection, note_type: str
+) -> Optional[Dict[str, Any]]:
     """List all available note types"""
     for x in coll.models.all():
-        if x['name'] == note_type:
+        if x["name"] == note_type:
             return x
     return None
 
@@ -103,7 +105,7 @@ def add_note(coll: collection.Collection, deck_name: str, note_type_name: str):
     note_type = get_note_type(coll, note_type_name)
     assert note_type is not None
     new_note = coll.new_note(note_type)
-    coll.add_note(new_note, deck['id'])
+    coll.add_note(new_note, deck["id"])
     assert coll.db is not None
     coll.db.commit()
     return new_note
