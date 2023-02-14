@@ -1,10 +1,6 @@
 from autoanki import create
-import pandas as pd
-from pathlib import Path
-
-
-cache = Path(__file__).parent / ".cache"
-cache.mkdir(exist_ok=True)
+import requests
+import bs4
 
 
 def build_note_type():
