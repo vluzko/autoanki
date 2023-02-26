@@ -1,0 +1,39 @@
+[project]
+name = "autoanki"
+version = "0.1.0"
+authors = [
+  { name="Vincent Luczkow", email="vincent.luczkow@gmail.com" },
+]
+description = "Reimplementation of auk in Python"
+readme = "README.md"
+license = { file="LICENSE" }
+requires-python = ">=3.6"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+dependencies = [
+    "anki==2.1.54"
+]
+
+[project.optional-dependencies]
+dev = [
+    "black==22.6.0",
+    "mypy==0.971",
+    "pandas-stubs==1.5.2",
+    "pre-commit==2.20.0",
+    "pytest==7.1.2",
+    "Sphinx==5.1.1",
+    "sphinx_rtd_theme==1.0.0"
+]
+
+[project.urls]
+"Homepage" = "https://github.com/vluzko/autoanki"
+"Bug Tracker" = "https://github.com/vluzko/autoanki/issues"
+
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
