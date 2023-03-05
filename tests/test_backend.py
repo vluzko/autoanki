@@ -8,17 +8,25 @@ ANKI_PATH = Path(__file__).parent / "fake_anki"
 ANKI_REF = ANKI_PATH / "User 1" / "collection.bak"
 
 
+@fixture
+def coll() -> backend.collection.Collection:
+    return backend.get_collection("User 1", anki_path=ANKI_PATH)
+
+
 def test_coll():
     coll = backend.get_collection("User 1", anki_path=ANKI_PATH)
 
 
-def test_get_deck():
-    coll = backend.get_collection("User 1", anki_path=ANKI_PATH)
+def test_get_deck(coll):
     deck = backend.get_deck(coll, "Default")
 
 
-def test_get_note_type():
-    coll = backend.get_collection("User 1", anki_path=ANKI_PATH)
+def test_has_deck(coll):
+    assert coll.has_deck("Default")
+    assert not coll.has_deck("Does not exist")
+
+
+def test_get_note_type(coll):
     note_type = backend.get_note_type(coll, "Basic")
 
 
@@ -39,6 +47,7 @@ def test_update_note():
     note = coll.get_note(note_id)
     note.fields[0] = "test"
     coll.update_note(note)
+    assert coll.db is not None
     coll.db.commit()
     del coll
     coll = backend.get_collection("User 1", anki_path=ANKI_PATH)

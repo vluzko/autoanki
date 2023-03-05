@@ -1,68 +1,100 @@
-from autoanki import create
-import pandas as pd
+from typing import Dict, Tuple
+import requests
+import bs4
 from pathlib import Path
+from autoanki import create
 
 
-cache = Path(__file__).parent / ".cache"
-cache.mkdir(exist_ok=True)
-
-
-def build_note(s_name: str, c_name: str, level: str):
-    blank_note = create.blank_note("Taxonomy")
-    blank_note.fields[0] = c_name
-    blank_note.fields[1] = s_name
-    blank_note.fields[2] = level
-    return blank_note
-
-
-def build_all_notes():
-    fpath = Path(__file__).parent / "clements_checklist_2022.csv"
-    df = pd.read_csv(fpath)
-    orders = df["order"].dropna().unique()
-    families = df["family"].str.split(" ", n=1, expand=True)
-    s_fam = families[0].dropna().unique()
-    c_fam = [x[1:-1] for x in families[1].dropna().unique()]
-
-    deck = create.load_deck("Nature - Avian Taxonomy")
-    present = set(deck.get_field_all(1))
-    for i, order in enumerate(orders):
-        if order in present:
-            continue
-        note = build_note(order, f"{i}", "order")
-        deck.add_card(note)
-
-    for s, c in zip(s_fam, c_fam):
-        if s in present:
-            continue
+def get_page_data(name: str, code: str):
+    url = f"https://ebird.org/species/{code}/"
+    path = Path(__file__).parent / "data"
+    path.mkdir(exist_ok=True)
+    f_path = path / code
+    if f_path.exists():
+        page_content = f_path.open("r").read()
+    else:
+        page = requests.get(url)
+        if page.status_code == 404:
+            return None
         else:
-            note = build_note(s, f"{c} (family)", "family")
-            deck.add_card(note)
+            f_path.write_bytes(page.content)
+        page_content = page.content
+    parsed = bs4.BeautifulSoup(page_content, features="html.parser")
+    name_span = parsed.findAll("span", {"class": "Heading-main Media--hero-title"})
+    assert len(name_span) == 1
+    name = name_span[0].string
+
+    s_name_span = parsed.findAll(
+        "span",
+        {"class": "Heading-sub Heading-sub--sci Heading-sub--custom u-text-4-loose"},
+    )
+    assert len(s_name_span) == 1
+    s_name = s_name_span[0].string
+
+    classification_div = parsed.findAll(
+        "div", {"class": "Breadcrumbs Breadcrumbs--reverse u-stack-sm"}
+    )
+    assert len(classification_div) == 1
+
+    order_li, family_li = classification_div[0].findChildren("li")
+    order = order_li.string
+    family = family_li.string
+
+    # image_div = parsed.findAll('div', {'class': 'MediaThumbnail Media Media--hero'})
+    # main_image_src = image_div[0].findAll('img')[0].attrs['src']
+    return {"name": name, "s_name": s_name, "order": order, "family": family}
 
 
-def get_wiki_desc(n: str):
-    import requests
-    from bs4 import BeautifulSoup
+def build_card(card, codes):
+    name = card.fields[1]
+    new_card = False
+    if name == "":
+        new_card = True
+        image_field = card.fields[-2]
+        src_end = image_field.find("[")
+        if src_end == -1:
+            name = image_field.strip()
+        else:
+            name = image_field[:src_end].strip()
+    name = name.lower()
+    name = name.replace("&nbsp", "").replace("-", " ").strip()
+    name = name.replace(";", "")
+    if name in codes:
+        code = codes[name]
+        data = get_page_data(name, code)
+        if data is None:
+            print(name)
+        else:
+            card.fields[2] = data["s_name"]
+            if new_card:
+                start = card.fields[3].find("<img")
+                end = card.fields[3].find('.jpg"/>')
+                if start != -1:
+                    new_field = card.fields[3][start : end + 7]
+                    card.fields[3] = new_field
+                    card.tags = [data["order"], data["family"]]
+        return card
+    else:
+        print(name)
 
-    url = f"https://en.wikipedia.org/wiki/{n}"
-    r = requests.get(url)
-    soup = BeautifulSoup(r.text, "html.parser")
-    content = soup.find("div", attrs={"id": "mw-content-text"})
-    try:
-        first_p = content.findAll("p")[1].text
-        print(first_p)
-        return first_p
-    except IndexError:
-        print(f"No description for {n}")
-        return ""
 
-
-def add_descriptions():
-    deck = create.load_deck("Nature - Avian Taxonomy")
-    for note in deck.cards:
-        desc = get_wiki_desc(note.fields[1])
-        note.fields[-1] = note.fields[-1] + "\n" + desc
-    deck.update_notes(deck.cards)
+def main():
+    deck = create.create_empty_deck("Nature - Birds of Peru")
+    create.create_note_type(
+        "Birds", ["Name", "Scientific Name", "Image", "Distribution"]
+    )
+    # deck = create.load_deck('Nature - Birds of the Americas')
+    # codes = get_codes()
+    # missing = []
+    # updated = []
+    # for i, card in enumerate(deck.cards):
+    #     res = build_card(card, codes)
+    #     if res is None:
+    #         missing.append(card)
+    #     else:
+    #         updated.append(res)
+    # deck.update_notes(updated)
 
 
 if __name__ == "__main__":
-    add_descriptions()
+    main()

@@ -1,17 +1,15 @@
-from __future__ import annotations
-import anki
-
 from anki import collection, notes, decks
-from os import environ
 from pathlib import Path
 from typing import Any, List, Optional, Tuple, Dict, TypedDict
 from autoanki import config
 
 
-OPEN_COLLS = {}
+OPEN_COLLS: Dict[Path, Any] = {}
 
 
 class DeckDict(TypedDict):
+    """Anki's type for storing deck information."""
+
     id: decks.DeckId
     mod: int
     name: str
@@ -36,36 +34,21 @@ def get_collection(
         return coll
 
 
-def add_deck(coll: collection.Collection, deck_name: str):
+def add_deck(coll: collection.Collection, deck_name: str) -> DeckDict:
     """Add a deck to a collection"""
     coll.decks.add_normal_deck_with_name(deck_name)
     coll.db.commit()  # type: ignore
-    raise NotImplementedError
-    # TODO: Return the deck
+    return get_deck(coll, deck_name)
 
 
 def all_decks(coll: collection.Collection) -> Dict[decks.DeckId, DeckDict]:
+    """Get a list of all decks in the collection."""
     raise NotImplementedError
 
 
-def all_note_ids(coll):
-    return coll.find_notes("")
-
-
-def all_notes(coll):
-    ids = all_note_ids(coll)
-    notes = [coll.get_note(x) for x in ids]
-    return notes
-
-
-def list_decks(coll: collection.Collection):
-    for deck in coll.decks.all_names_and_ids():
-        print(deck.name)
-
-
-def add_note_to_deck(coll: collection.Collection, note, deck_id):
-    coll.add_note(note, deck_id)
-    coll.db.commit()  # type: ignore
+def has_deck(coll: collection.Collection, name: str) -> bool:
+    """Check if a deck already exists."""
+    return name in coll.decks.all_names()
 
 
 def get_deck(coll: collection.Collection, name: str) -> DeckDict:
@@ -74,6 +57,26 @@ def get_deck(coll: collection.Collection, name: str) -> DeckDict:
         if x.name == name:
             return coll.decks.get(x.id)  # type: ignore
     raise ValueError("Deck not found")
+
+
+def all_note_ids(coll: collection.Collection):
+    """Get the ID of every note in the collection."""
+    return coll.find_notes("")
+
+
+def all_notes(coll: collection.Collection) -> List[notes.Note]:
+    """Get every note in the collection."""
+    ids = all_note_ids(coll)
+    notes = [coll.get_note(x) for x in ids]
+    return notes
+
+
+def add_note_to_deck(
+    coll: collection.Collection, note: notes.Note, deck_id: decks.DeckId
+):
+    """Add an existing note to a deck."""
+    coll.add_note(note, deck_id)
+    coll.db.commit()  # type: ignore
 
 
 def get_deck_notes(coll: collection.Collection, deck: DeckDict) -> List[notes.Note]:
