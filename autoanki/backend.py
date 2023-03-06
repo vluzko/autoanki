@@ -11,6 +11,7 @@ class DeckDict(TypedDict):
     """Anki's type describing a deck.
     Note that notes and cards are not directly attached to the deck.
     """
+
     id: decks.DeckId
     mod: int
     name: str
@@ -23,6 +24,7 @@ class DeckDict(TypedDict):
 
 class FieldDict(TypedDict):
     """Anki's type describing a field of a note."""
+
     name: str
     ord: int
     sticky: bool
@@ -36,6 +38,7 @@ class CardDict(TypedDict):
     """Anki's type describing a card.
     Within the anki code this is also called a "template".
     """
+
     name: str
     ord: int
     qfmt: str
@@ -51,6 +54,7 @@ class GoodNoteTypeDict(TypedDict):
     """Notetype Dict that actually declares its fields
     Sorry for being salty but Dict[str, Any] isn't a real type.
     """
+
     id: int
     name: str
     type: int
@@ -174,7 +178,12 @@ def has_note_type(coll: collection.Collection, name) -> bool:
     return name in {x.name for x in all_note_types(coll)}
 
 
-def new_note_type(coll: collection.Collection, name: str, fields: List[str], cards: Union[CardDict, Tuple[CardDict, ...]] = ()) -> int:
+def new_note_type(
+    coll: collection.Collection,
+    name: str,
+    fields: List[str],
+    cards: Union[CardDict, Tuple[CardDict, ...]] = (),
+) -> int:
     """Add a new note type to the collection
 
     Returns:
@@ -182,10 +191,10 @@ def new_note_type(coll: collection.Collection, name: str, fields: List[str], car
     """
     note_dict: GoodNoteTypeDict = coll.models.new(name)  # type: ignore
     field_dicts = [make_default_field(n) for n in fields]
-    note_dict['flds'] = field_dicts
+    note_dict["flds"] = field_dicts
 
     if cards == ():
-        note_dict['tmpls'] = make_default_card(name, fields)
+        note_dict["tmpls"] = make_default_card(name, fields)
     else:
         raise NotImplementedError
     res = coll.models.add_dict(note_dict)  # type: ignore
@@ -196,13 +205,13 @@ def new_note_type(coll: collection.Collection, name: str, fields: List[str], car
 def make_default_field(name: str) -> FieldDict:
     """Create a basic field dict."""
     return {
-        'name': name,
-        'ord': 0,
-        'sticky': False,
-        'rtl': False,
-        'font': 'Arial',
-        'size': 20,
-        'description': ''
+        "name": name,
+        "ord": 0,
+        "sticky": False,
+        "rtl": False,
+        "font": "Arial",
+        "size": 20,
+        "description": "",
     }
 
 
@@ -210,21 +219,23 @@ def make_default_card(note_type: str, fields: List[str]) -> List[CardDict]:
     """Create a basic card.
     Puts the first field on the front and all other fields on the back.
     """
-    front = f'{{{{{fields[0]}}}}}'
-    back_fields = r"\n\n".join([f'{{{{{{x}}}}}}' for x in fields[1:]])
-    back = f'{{{{FrontSide}}}}\n\n<hr id=answer>\n\n{back_fields}'
+    front = f"{{{{{fields[0]}}}}}"
+    back_fields = r"\n\n".join([f"{{{{{{x}}}}}}" for x in fields[1:]])
+    back = f"{{{{FrontSide}}}}\n\n<hr id=answer>\n\n{back_fields}"
 
-    return [{
-        'name': f'{note_type}_card_1',
-        'ord': 0,
-        'qfmt': front,
-        'afmt': back,
-        'bqmft': '',
-        'bafmt': '',
-        'did': None,
-        'bfont': '',
-        'bsize': 0,
-    }]
+    return [
+        {
+            "name": f"{note_type}_card_1",
+            "ord": 0,
+            "qfmt": front,
+            "afmt": back,
+            "bqmft": "",
+            "bafmt": "",
+            "did": None,
+            "bfont": "",
+            "bsize": 0,
+        }
+    ]
 
 
 def new_card(coll: collection.Collection, note_type: str):

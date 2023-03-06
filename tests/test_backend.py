@@ -63,7 +63,7 @@ def test_recreate_existing_note_type(coll):
 
     assert original.keys() == new.keys()
     for f, v in original.items():
-        if f == 'name' or f == 'id':
+        if f == "name" or f == "id":
             continue
         new[f] = v
     res = coll.models.add_dict(new)
@@ -73,19 +73,19 @@ def test_recreate_existing_note_type(coll):
     check = backend.get_note_type(coll, "A")
 
     for k, v in check.items():
-        if k in {'id', 'mod', 'usn'}:
+        if k in {"id", "mod", "usn"}:
             continue
         assert v == new[k]
 
 
 def test_create_note_type(coll):
-    res = backend.new_note_type(coll, 'Test note', ['Test field'])
+    res = backend.new_note_type(coll, "Test note", ["Test field"])
 
     del coll
 
     coll = make_test_coll()
     check = backend.get_note_type(coll, "Test note")
-    assert check['id'] == res
+    assert check["id"] == res
 
 
 @fixture(autouse=True)
