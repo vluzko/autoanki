@@ -45,7 +45,7 @@ class Deck:
 
 
 def blank_note(
-    note_type: str, user_name: str = "Main", anki_path=config.ANKI_PATH
+    note_type: str, user_name: str = config.DEFAULT_USER, anki_path=config.ANKI_PATH
 ) -> backend.notes.Note:
     """Create a blank note of the given type."""
     collection = backend.get_collection(user_name, anki_path=anki_path)
@@ -55,14 +55,19 @@ def blank_note(
 def create_note_type(
     name: str,
     fields: Iterable[str],
-    user_name: str = "Main",
+    user_name: str = config.DEFAULT_USER,
     anki_path: Path = config.ANKI_PATH,
     exists_ok: bool = True,
 ):
     """Create a new note with the given fields."""
     collection = backend.get_collection(user_name, anki_path=anki_path)
+    if backend.has_note_type(collection, name):
+        if exists_ok:
+            return backend.get_note_type(collection, name)
+        else:
+            raise ValueError
+    res = backend.new_note_type(collection, name, fields)
     import pdb
-
     pdb.set_trace()
     raise NotImplementedError
 
@@ -77,7 +82,7 @@ def create_deck_from_iterator(deck_name, note_type, note_data):
 
 def create_empty_deck(
     deck_name: str,
-    user_name: str = "Main",
+    user_name: str = config.DEFAULT_USER,
     anki_path: Path = config.ANKI_PATH,
     exists_ok: bool = True,
 ) -> Deck:
@@ -94,7 +99,7 @@ def create_empty_deck(
 
 
 def load_deck(
-    deck_name: str, user_name: str = "Main", anki_path=config.ANKI_PATH
+    deck_name: str, user_name: str = config.DEFAULT_USER, anki_path=config.ANKI_PATH
 ) -> Deck:
     """Load a deck with the given name."""
     collection = backend.get_collection(user_name, anki_path=anki_path)
@@ -103,7 +108,7 @@ def load_deck(
     return Deck(collection, deck, cards)
 
 
-def load_all_decks(user_name: str = "Main", anki_path=config.ANKI_PATH):
+def load_all_decks(user_name: str = config.DEFAULT_USER, anki_path=config.ANKI_PATH):
     collection = backend.get_collection(user_name, anki_path=anki_path)
     decks = []
     for obj in collection.decks.all_names_and_ids():

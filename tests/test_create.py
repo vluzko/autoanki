@@ -5,6 +5,7 @@ from pathlib import Path
 from pytest import fixture
 
 
+USER = "User 1"
 ANKI_PATH = Path(__file__).parent / "fake_anki"
 ANKI_REF = ANKI_PATH / "User 1" / "collection.bak"
 
@@ -29,6 +30,10 @@ def test_create_deck():
     assert len(decks) == 2
     assert decks[0].name == "Default"
     assert decks[1].name == "Test Deck"
+
+
+def test_create_note_type():
+    res = create.create_note_type("Test Note", [], user_name=USER, anki_path=ANKI_PATH)
 
 
 @fixture(autouse=True)

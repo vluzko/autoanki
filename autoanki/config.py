@@ -2,6 +2,8 @@ from os import environ
 from pathlib import Path
 
 
+DEFAULT_USER = "Main"
+
 if "ANKI_BASE" in environ:
     ANKI_PATH = Path(environ["ANKI_BASE"])
 elif "XDG_DATA_HOME" in environ:
