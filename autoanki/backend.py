@@ -242,5 +242,9 @@ def new_card(coll: collection.Collection, note_type: str):
     raise NotImplementedError
 
 
-def add_media(coll: collection.Collection):
+def add_media(coll: collection.Collection, media_path: Path):
+    coll.media.add_file(str(media_path.absolute()))
+    import pdb
+
+    pdb.set_trace()
     raise NotImplementedError

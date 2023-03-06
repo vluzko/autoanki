@@ -88,6 +88,10 @@ def test_create_note_type(coll):
     assert check["id"] == res
 
 
+def test_add_media(coll):
+    backend.add_media(coll, None)
+
+
 @fixture(autouse=True)
 def clean_db():
     """Make a clean copy of the collection after each test"""
