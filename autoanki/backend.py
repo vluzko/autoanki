@@ -242,5 +242,16 @@ def new_card(coll: collection.Collection, note_type: str):
     raise NotImplementedError
 
 
-def add_media(coll: collection.Collection):
-    raise NotImplementedError
+def add_media(coll: collection.Collection, media_path: Path):
+    """Add a media file to the collection."""
+    coll.media.add_file(str(media_path.absolute()))
+    return media_path.name
+
+
+def list_media(
+    coll: collection.Collection, extension: Optional[str] = None
+) -> List[str]:
+    """List all media files."""
+    media_folder = Path(coll.media._dir)
+    glob = "*" if extension is None else f"*.{extension}"
+    return [x.name for x in media_folder.glob(glob)]
