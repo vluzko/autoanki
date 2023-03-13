@@ -243,8 +243,15 @@ def new_card(coll: collection.Collection, note_type: str):
 
 
 def add_media(coll: collection.Collection, media_path: Path):
+    """Add a media file to the collection."""
     coll.media.add_file(str(media_path.absolute()))
-    import pdb
+    return media_path.name
 
-    pdb.set_trace()
-    raise NotImplementedError
+
+def list_media(
+    coll: collection.Collection, extension: Optional[str] = None
+) -> List[str]:
+    """List all media files."""
+    media_folder = Path(coll.media._dir)
+    glob = "*" if extension is None else f"*.{extension}"
+    return [x.name for x in media_folder.glob(glob)]

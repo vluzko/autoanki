@@ -1,3 +1,4 @@
+import filecmp
 import shutil
 from pathlib import Path
 from pytest import fixture
@@ -5,7 +6,7 @@ from autoanki import backend
 
 
 ANKI_PATH = Path(__file__).parent / "fake_anki"
-ANKI_REF = ANKI_PATH / "User 1" / "collection.bak"
+ANKI_REF = Path(__file__).parent / "reference" / "collection.bak"
 
 
 def make_test_coll() -> backend.collection.Collection:
@@ -89,11 +90,39 @@ def test_create_note_type(coll):
 
 
 def test_add_media(coll):
-    backend.add_media(coll, None)
+    image_path = Path(__file__).parent / "logo.png"
+    backend.add_media(coll, image_path)
+    new_path = ANKI_PATH / "User 1" / "collection.media" / "logo.png"
+    filecmp.cmp(image_path, new_path)
+
+
+def test_list_media(coll):
+    image_path = Path(__file__).parent / "logo.png"
+    backend.add_media(coll, image_path)
+    assert backend.list_media(coll) == ["logo.png"]
 
 
 @fixture(autouse=True)
 def clean_db():
     """Make a clean copy of the collection after each test"""
     yield
+    files = (
+        "collection.bak",
+        "collection.bak-shm",
+        "collection.bak-wal",
+        "collection.media.db2",
+        "collection.anki2-wal",
+    )
+    for f in files:
+        path = ANKI_PATH / "User 1" / f
+        if path.exists():
+            path.unlink()
+
+    folders = ("collection.media", "media.trash")
+    for f in folders:
+        path = ANKI_PATH / "User 1" / f
+        if path.exists():
+            for child in path.glob("*"):
+                assert child.is_file()
+                child.unlink()
     shutil.copy(ANKI_REF, ANKI_PATH / "User 1" / "collection.anki2")
