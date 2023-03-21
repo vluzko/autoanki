@@ -1,4 +1,4 @@
-from typing import Dict, Tuple
+from typing import Dict, List, Tuple
 import requests
 import bs4
 from pathlib import Path
@@ -78,22 +78,46 @@ def build_card(card, codes):
         print(name)
 
 
+def get_region(region_name: str) -> List[Tuple[str, str]]:
+    cache = Path(__file__).parent / ".cache"
+    cache.mkdir(exist_ok=True)
+    cached = cache / "index"
+    url = f"https://ebird.org/region/{region_name}?YR=all"
+    if cached.exists():
+        content = cached.read_bytes()
+    else:
+        page = requests.get(url)
+        content = page.content
+        cached.write_bytes(content)
+
+    parsed = bs4.BeautifulSoup(content, features="html.parser")
+    observations = parsed.findAll("div", {"id": "place-species-observed-results"})
+    assert len(observations) == 1
+    observations = observations[0]
+    sections = []
+    for child in observations.children:
+        if child.name == "section":
+            sections.append(child)
+        elif child.name == "div":
+            if "ObservationSeparator" in child.attrs["class"]:
+                break
+    name_codes = []
+    for i, section in enumerate(sections):
+        link = section.find("a")
+        species_code = link.attrs["data-species-code"]
+        species_name = link.findChild().string
+        name_codes.append((species_name, species_code))
+    return name_codes
+
+
 def main():
-    deck = create.create_empty_deck("Nature - Birds of Peru")
-    create.create_note_type(
-        "Birds", ["Name", "Scientific Name", "Image", "Distribution"]
-    )
-    # deck = create.load_deck('Nature - Birds of the Americas')
-    # codes = get_codes()
-    # missing = []
-    # updated = []
-    # for i, card in enumerate(deck.cards):
-    #     res = build_card(card, codes)
-    #     if res is None:
-    #         missing.append(card)
-    #     else:
-    #         updated.append(res)
-    # deck.update_notes(updated)
+    region_name = "PE"
+    names_codes = get_region(region_name)
+    print(get_page_data(*names_codes[0]))
+    # deck = create.create_empty_deck("Nature - Birds of Peru")
+    # create.create_note_type(
+    #     "Birds", ["Name", "Scientific Name", "Image", "Distribution"]
+    # )
 
 
 if __name__ == "__main__":
