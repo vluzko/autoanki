@@ -7,7 +7,7 @@ from autoanki import create
 
 def get_page_data(name: str, code: str):
     url = f"https://ebird.org/species/{code}/"
-    path = Path(__file__).parent / "data"
+    path = Path(__file__).parent / ".cache"
     path.mkdir(exist_ok=True)
     f_path = path / code
     if f_path.exists():
