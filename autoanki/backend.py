@@ -52,7 +52,7 @@ class CardDict(TypedDict):
 
 class GoodNoteTypeDict(TypedDict):
     """Notetype Dict that actually declares its fields
-    Sorry for being salty but Dict[str, Any] isn't a real type.
+    Not to be salty but Dict[str, Any] isn't a real type.
     """
 
     id: int
@@ -170,7 +170,7 @@ def add_note(coll: collection.Collection, deck_name: str, note_type_name: str):
 
 def all_note_types(coll: collection.Collection) -> List[models.NotetypeNameId]:
     """Get all note names and IDs."""
-    return coll.models.all_names_and_ids()
+    return list(coll.models.all_names_and_ids())
 
 
 def has_note_type(coll: collection.Collection, name) -> bool:
