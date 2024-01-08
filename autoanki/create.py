@@ -37,7 +37,7 @@ class Deck:
         self._collection.db.commit()
 
     def create_note(self, note_type: str, fields: Dict[str, str]):
-        note = backend.blank_note(self._collection, note_type)
+        # note = backend.blank_note(self._collection, note_type)
 
         raise NotImplementedError
 
@@ -67,10 +67,7 @@ def create_note_type(
             return backend.get_note_type(collection, name)
         else:
             raise ValueError
-    res = backend.new_note_type(collection, name, fields)
-    import pdb
-
-    pdb.set_trace()
+    # res = backend.new_note_type(collection, name, fields)
     raise NotImplementedError
 
 

@@ -1,4 +1,3 @@
-import pickle
 from pathlib import Path
 
 import bs4
@@ -6,6 +5,33 @@ import requests
 
 cache = Path(__file__).parent / ".cache"
 cache.mkdir(exist_ok=True)
+
+
+SPECIES_URL = "https://ebird.org/species/chiswi"
+
+
+def parse_species_page():
+    page = requests.get(SPECIES_URL)
+    content = page.content
+    parsed = bs4.BeautifulSoup(content, features="html.parser")
+    classification_div = parsed.findAll("div", {"class": "Classification"})
+    assert len(classification_div) == 1
+
+    order_li, family_li = classification_div[0].findChildren("li")
+    order = order_li.string
+    family = family_li.string
+
+    image_div = parsed.findAll("div", {"class": "MediaThumbnail Media Media--hero"})
+    main_image_src = image_div[0].findAll("img")[0].attrs["src"]
+    data = {
+        # "name": name,
+        # "s_name": s_name,
+        "order": order,
+        "family": family,
+        "image": main_image_src,
+    }
+    raise NotImplementedError
+    return data
 
 
 def parse_index_page(region: str = "US", year: str = "all"):

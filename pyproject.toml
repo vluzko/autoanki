@@ -16,7 +16,6 @@ classifiers = [
 
 dependencies = [
     "anki==23.12.1",
-    "requests>=2.31.0"
 ]
 
 [project.optional-dependencies]
@@ -29,6 +28,10 @@ dev = [
     "Sphinx>=7.2.6",
     "sphinx_rtd_theme>=1.0.0",
     "types-requests>=2.31.0",
+]
+examples = [
+    "beautifulsoup4==4.12.2",
+    "requests>=2.31.0"
 ]
 
 [project.urls]

@@ -20,10 +20,16 @@ def coll() -> backend.collection.Collection:
 
 def test_coll():
     coll = backend.get_collection("User 1", anki_path=ANKI_PATH)
+    import pdb
+
+    pdb.set_trace()
 
 
 def test_get_deck(coll):
     deck = backend.get_deck(coll, "Default")
+    import pdb
+
+    pdb.set_trace()
 
 
 def test_has_deck(coll):
@@ -33,6 +39,9 @@ def test_has_deck(coll):
 
 def test_get_note_type(coll):
     note_type = backend.get_note_type(coll, "Basic")
+    import pdb
+
+    pdb.set_trace()
 
 
 def test_add_note(coll):
@@ -49,6 +58,9 @@ def test_update_note(coll):
     note_id = all_notes[0]
     note = coll.get_note(note_id)
     note.fields[0] = "test"
+    import pdb
+
+    pdb.set_trace()
     coll.update_note(note)
     assert coll.db is not None
     coll.db.commit()
@@ -68,6 +80,9 @@ def test_recreate_existing_note_type(coll):
             continue
         new[f] = v
     res = coll.models.add_dict(new)
+    import pdb
+
+    pdb.set_trace()
     del coll
 
     coll = make_test_coll()

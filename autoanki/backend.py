@@ -221,7 +221,7 @@ def make_default_card(note_type: str, fields: List[str]) -> List[CardDict]:
     Puts the first field on the front and all other fields on the back.
     """
     front = f"{{{{{fields[0]}}}}}"
-    back_fields = r"\n\n".join([f"{{{{{{x}}}}}}" for x in fields[1:]])
+    back_fields = r"\n\n".join([f"{{{{{{x}}}}}}" for x in fields[1:]])  # noqa: F541
     back = f"{{{{FrontSide}}}}\n\n<hr id=answer>\n\n{back_fields}"
 
     return [
