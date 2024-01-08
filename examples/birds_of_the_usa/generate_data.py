@@ -36,9 +36,10 @@ def parse_index_page(region: str = "US", year: str = "all"):
         name_codes.append(f"{species_name} {species_code}")
         if i == 1109:
             break
-    p = Path(__file__).parent / "name_codes.txt"
+    p = cache / "name_codes.txt"
     s = "\n".join(name_codes)
     p.write_text(s)
+    return s
 
 
 if __name__ == "__main__":
