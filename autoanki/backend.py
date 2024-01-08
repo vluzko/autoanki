@@ -1,8 +1,9 @@
-from anki import collection, notes, decks, models
 from pathlib import Path
-from typing import Any, List, Optional, Tuple, Dict, TypedDict, Union
-from autoanki import config
+from typing import Any, Dict, List, Optional, Tuple, TypedDict, Union
 
+from anki import collection, decks, models, notes
+
+from autoanki import config
 
 OPEN_COLLS: Dict[Path, Any] = {}
 

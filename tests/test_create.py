@@ -1,9 +1,9 @@
-from autoanki import create, backend
-
 import shutil
 from pathlib import Path
+
 from pytest import fixture
 
+from autoanki import backend, create
 
 USER = "User 1"
 ANKI_PATH = Path(__file__).parent / "fake_anki"

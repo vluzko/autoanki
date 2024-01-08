@@ -1,6 +1,7 @@
-import autoanki
-import requests
 import bs4
+import requests
+
+import autoanki
 
 
 def create_note_type():

@@ -1,7 +1,9 @@
-from typing import Dict, List, Tuple
-import requests
-import bs4
 from pathlib import Path
+from typing import Dict, List, Tuple
+
+import bs4
+import requests
+
 from autoanki import create
 
 
@@ -40,9 +42,15 @@ def get_page_data(name: str, code: str):
     order = order_li.string
     family = family_li.string
 
-    # image_div = parsed.findAll('div', {'class': 'MediaThumbnail Media Media--hero'})
-    # main_image_src = image_div[0].findAll('img')[0].attrs['src']
-    return {"name": name, "s_name": s_name, "order": order, "family": family}
+    image_div = parsed.findAll("div", {"class": "MediaThumbnail Media Media--hero"})
+    main_image_src = image_div[0].findAll("img")[0].attrs["src"]
+    return {
+        "name": name,
+        "s_name": s_name,
+        "order": order,
+        "family": family,
+        "image": main_image_src,
+    }
 
 
 def build_card(card, codes):

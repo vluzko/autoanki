@@ -1,7 +1,8 @@
-from autoanki import create
-import pandas as pd
 from pathlib import Path
 
+import pandas as pd
+
+from autoanki import create
 
 cache = Path(__file__).parent / ".cache"
 cache.mkdir(exist_ok=True)

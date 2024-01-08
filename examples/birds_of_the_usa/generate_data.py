@@ -1,15 +1,20 @@
 import pickle
-import requests
-import bs4
 from pathlib import Path
 
+import bs4
+import requests
 
 cache = Path(__file__).parent / ".cache"
 cache.mkdir(exist_ok=True)
 
 
-def parse_index_page():
-    url = "https://ebird.org/region/US?yr=all"
+def parse_index_page(region: str = "US", year: str = "all"):
+    """Grab the eBird sitings for the given region.
+
+    Args:
+        region: The eBird region code. Defaults to "US" for the United States.
+    """
+    url = f"https://ebird.org/region/{region}?yr={year}"
     cached = cache / "index"
     if cached.exists():
         content = cached.read_text()
@@ -36,4 +41,5 @@ def parse_index_page():
     p.write_text(s)
 
 
-parse_index_page()
+if __name__ == "__main__":
+    parse_index_page()

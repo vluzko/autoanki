@@ -1,8 +1,9 @@
 import shutil
 from pathlib import Path
-from pytest import fixture
-from autoanki import backend
 
+from pytest import fixture
+
+from autoanki import backend
 
 ANKI_PATH = Path(__file__).parent / "fake_anki"
 ANKI_REF = ANKI_PATH / "User 1" / "collection.bak"

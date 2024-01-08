@@ -1,7 +1,6 @@
 from os import environ
 from pathlib import Path
 
-
 DEFAULT_USER = "Main"
 
 if "ANKI_BASE" in environ:

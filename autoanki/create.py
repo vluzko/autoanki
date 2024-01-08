@@ -1,6 +1,7 @@
-from pathlib import Path
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Callable, Dict, Iterable, List, Optional
+
 from autoanki import backend, config
 
 

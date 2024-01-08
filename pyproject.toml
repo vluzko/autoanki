@@ -4,10 +4,10 @@ version = "0.1.0"
 authors = [
   { name="Vincent Luczkow", email="vincent.luczkow@gmail.com" },
 ]
-description = "Reimplementation of auk in Python"
+description = "Tools for interacting Anki decks."
 readme = "README.md"
 license = { file="LICENSE" }
-requires-python = ">=3.6"
+requires-python = ">=3.9"
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
@@ -15,17 +15,18 @@ classifiers = [
 ]
 
 dependencies = [
-    "anki==2.1.54"
+    "anki==2.1.54",
+    "requests>=2.31.0"
 ]
 
 [project.optional-dependencies]
 dev = [
-    "black==22.6.0",
-    "mypy==0.971",
-    "pre-commit==2.20.0",
-    "pytest==7.1.2",
-    "Sphinx==5.1.1",
-    "sphinx_rtd_theme==1.0.0"
+    "black>=22.6.0",
+    "mypy>=0.971",
+    "pre-commit>=2.20.0",
+    "pytest>=7.1.2",
+    "Sphinx>=5.1.1",
+    "sphinx_rtd_theme>=1.0.0"
 ]
 
 [project.urls]
