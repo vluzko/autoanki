@@ -86,6 +86,17 @@ def get_collection(
         return coll
 
 
+def close_collection(coll: collection.Collection):
+    global OPEN_COLLS
+    coll.close()
+    del OPEN_COLLS[Path(coll.path)]
+
+
+def close_all():
+    for c in tuple(OPEN_COLLS.values()):
+        close_collection(c)
+
+
 def add_deck(coll: collection.Collection, deck_name: str) -> DeckDict:
     """Add a deck to a collection"""
     coll.decks.add_normal_deck_with_name(deck_name)
@@ -138,21 +149,19 @@ def get_deck_notes(coll: collection.Collection, deck: DeckDict) -> List[notes.No
     return deck_notes
 
 
-def get_note_type(
-    coll: collection.Collection, note_type: str
-) -> Optional[Dict[str, Any]]:
-    """List all available note types"""
+def get_note_type(coll: collection.Collection, note_type: str) -> GoodNoteTypeDict:
+    """List all available note types."""
     for x in coll.models.all():
         if x["name"] == note_type:
-            return x
-    return None
+            return x  # type: ignore
+    raise ValueError("Note type not found")
 
 
 def blank_note(coll: collection.Collection, note_type_name: str):
     """Create a blank note"""
     note_type = get_note_type(coll, note_type_name)
     assert note_type is not None
-    new_note = coll.new_note(note_type)
+    new_note = coll.new_note(note_type)  # type: ignore
     return new_note
 
 
@@ -162,10 +171,9 @@ def add_note(coll: collection.Collection, deck_name: str, note_type_name: str):
     assert deck is not None
     note_type = get_note_type(coll, note_type_name)
     assert note_type is not None
-    new_note = coll.new_note(note_type)
+    new_note = coll.new_note(note_type)  # type: ignore
     coll.add_note(new_note, deck["id"])
     assert coll.db is not None
-    coll.db.commit()
     return new_note
 
 

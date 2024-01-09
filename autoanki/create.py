@@ -24,7 +24,6 @@ class Deck:
         assert self._collection.db is not None
         for note in notes:
             self._collection.update_note(note)
-        self._collection.db.commit()
 
     def map_notes_of_type(self, note_type: str, f: Callable):
         assert self._collection.db is not None
@@ -34,7 +33,6 @@ class Deck:
     def add_note(self, card):
         self._collection.add_note(card, self._deck["id"])
         assert self._collection.db is not None
-        self._collection.db.commit()
 
     def create_note(self, note_type: str, fields: Dict[str, str]):
         # note = backend.blank_note(self._collection, note_type)
@@ -91,7 +89,6 @@ def create_empty_deck(
         assert not backend.has_deck(collection, deck_name)
     collection.decks.add_normal_deck_with_name(deck_name)
     assert collection.db is not None
-    collection.db.commit()
     deck = backend.get_deck(collection, deck_name)
     cards = backend.get_deck_notes(collection, deck)
     return Deck(collection, deck, cards)
