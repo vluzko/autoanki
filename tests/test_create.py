@@ -1,9 +1,9 @@
-from autoanki import create, backend
-
-import shutil
 from pathlib import Path
+
+import test_backend
 from pytest import fixture
 
+from autoanki import backend, create
 
 USER = "User 1"
 ANKI_PATH = Path(__file__).parent / "fake_anki"
@@ -39,5 +39,5 @@ def test_create_note_type():
 @fixture(autouse=True)
 def clean_db():
     """Make a clean copy of the collection after each test"""
+    test_backend.clean()
     yield
-    shutil.copy(ANKI_REF, ANKI_PATH / "User 1" / "collection.anki2")

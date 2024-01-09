@@ -1,6 +1,7 @@
-from pathlib import Path
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Callable, Dict, Iterable, List, Optional
+
 from autoanki import backend, config
 
 
@@ -23,7 +24,6 @@ class Deck:
         assert self._collection.db is not None
         for note in notes:
             self._collection.update_note(note)
-        self._collection.db.commit()
 
     def map_notes_of_type(self, note_type: str, f: Callable):
         assert self._collection.db is not None
@@ -33,10 +33,9 @@ class Deck:
     def add_note(self, card):
         self._collection.add_note(card, self._deck["id"])
         assert self._collection.db is not None
-        self._collection.db.commit()
 
     def create_note(self, note_type: str, fields: Dict[str, str]):
-        note = backend.blank_note(self._collection, note_type)
+        # note = backend.blank_note(self._collection, note_type)
 
         raise NotImplementedError
 
@@ -66,10 +65,7 @@ def create_note_type(
             return backend.get_note_type(collection, name)
         else:
             raise ValueError
-    res = backend.new_note_type(collection, name, fields)
-    import pdb
-
-    pdb.set_trace()
+    # res = backend.new_note_type(collection, name, fields)
     raise NotImplementedError
 
 
@@ -93,7 +89,6 @@ def create_empty_deck(
         assert not backend.has_deck(collection, deck_name)
     collection.decks.add_normal_deck_with_name(deck_name)
     assert collection.db is not None
-    collection.db.commit()
     deck = backend.get_deck(collection, deck_name)
     cards = backend.get_deck_notes(collection, deck)
     return Deck(collection, deck, cards)
