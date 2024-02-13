@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Callable, Dict, Iterable, List, Optional
+from typing import Callable, Dict, Iterable, List, Optional, Sequence
 
 from autoanki import backend, config
 
@@ -39,9 +39,11 @@ class Deck:
 
         raise NotImplementedError
 
-    def add_note(self, note: backend.notes.Note):
+    def add_note(self, note: backend.notes.Note) -> int:
         self._collection.add_note(note, self._deck["id"])
         assert self._collection.db is not None
+        self._collection.after_note_updates([note.id], False)
+        return note.id
 
     def create_note(
         self, note_type: str, fields: Dict[str, str], tags: Optional[list[str]] = None
@@ -63,19 +65,16 @@ class Deck:
             note.fields[idx] = v
         if tags is not None:
             note.tags = tags
-        self._collection.add_note(note, self.id)  # type: ignore
-        return note.id
+        return self.add_note(note)
+
+    def delete_notes(self, notes: Sequence[int]):
+        self._collection.remove_notes(notes)  # type: ignore
+
+    def delete_note(self, note: int):
+        self.delete_notes((note,))
 
     def get_media(self):
         raise NotImplementedError
-
-
-def blank_note(
-    note_type: str, user_name: str = config.DEFAULT_USER, anki_path=config.ANKI_PATH
-) -> backend.notes.Note:
-    """Create a blank note of the given type."""
-    collection = backend.get_collection(user_name, anki_path=anki_path)
-    return backend.blank_note(collection, note_type)
 
 
 def create_note_type(

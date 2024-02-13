@@ -134,27 +134,11 @@ def all_notes(coll: collection.Collection) -> List[notes.Note]:
     return notes
 
 
-def add_note_to_deck(
-    coll: collection.Collection, note: notes.Note, deck_id: decks.DeckId
-):
-    """Add an existing note to a deck."""
-    coll.add_note(note, deck_id)
-    coll.db.commit()  # type: ignore
-
-
 def get_deck_notes(coll: collection.Collection, deck: DeckDict) -> List[notes.Note]:
     """Get all notes attached to a deck"""
     deck_note_ids = coll.find_notes('deck:"{}"'.format(deck["name"]))
     deck_notes = [coll.get_note(x) for x in deck_note_ids]
     return deck_notes
-
-
-def get_note_type(coll: collection.Collection, note_type: str) -> GoodNoteTypeDict:
-    """List all available note types."""
-    for x in coll.models.all():
-        if x["name"] == note_type:
-            return x  # type: ignore
-    raise ValueError("Note type not found")
 
 
 def blank_note(coll: collection.Collection, note_type_name: str):
@@ -177,9 +161,35 @@ def add_note(coll: collection.Collection, deck_name: str, note_type_name: str):
     return new_note
 
 
+def update_note_field(
+    coll: collection.Collection, note: notes.Note, field: str, new_value: str
+):
+    """Update a single field of an existing note."""
+    field_idx = note.keys().index(field)
+    note.fields[field_idx] = new_value
+    coll.update_note(note)
+    coll.after_note_updates([note.id], False)
+
+
+def add_note_to_deck(
+    coll: collection.Collection, note: notes.Note, deck_id: decks.DeckId
+):
+    """Add an existing note to a deck."""
+    coll.add_note(note, deck_id)
+    coll.db.commit()  # type: ignore
+
+
 def all_note_types(coll: collection.Collection) -> List[models.NotetypeNameId]:
     """Get all note names and IDs."""
     return list(coll.models.all_names_and_ids())
+
+
+def get_note_type(coll: collection.Collection, note_type: str) -> GoodNoteTypeDict:
+    """List all available note types."""
+    for x in coll.models.all():
+        if x["name"] == note_type:
+            return x  # type: ignore
+    raise ValueError("Note type not found")
 
 
 def has_note_type(coll: collection.Collection, name) -> bool:
@@ -255,6 +265,17 @@ def add_media(coll: collection.Collection, media_path: Path):
     """Add a media file to the collection."""
     coll.media.add_file(str(media_path.absolute()))
     return media_path.name
+
+
+def has_media(coll: collection.Collection, name_or_path: Union[str, Path]) -> bool:
+    """Check if a piece of media has already been added
+    Arguably this should check md5sums but *shrug*
+    """
+    if isinstance(name_or_path, Path):
+        f_name = name_or_path.name
+    else:
+        f_name = name_or_path
+    return coll.media.have(f_name)
 
 
 def list_media(
