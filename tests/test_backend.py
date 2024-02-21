@@ -20,6 +20,13 @@ def test_coll():
     assert coll.path == str(ANKI_PATH / "User 1" / "collection.anki2")
 
 
+def test_get_all_decks():
+    coll = make_test_coll()
+    decks = backend.all_decks(coll)
+    assert len(decks) == 1
+    assert decks[1]["name"] == "Default"
+
+
 def test_get_deck():
     coll = make_test_coll()
     deck = backend.get_deck(coll, "Default")
@@ -92,6 +99,12 @@ def test_recreate_existing_note_type():
         if k in {"id", "mod", "usn"}:
             continue
         assert v == new[k]
+
+
+def get_all_note_types():
+    coll = make_test_coll()
+    note_types = backend.all_note_types(coll)
+    assert len(note_types) == 4
 
 
 def test_create_note_type():

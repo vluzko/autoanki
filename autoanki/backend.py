@@ -104,9 +104,10 @@ def add_deck(coll: collection.Collection, deck_name: str) -> DeckDict:
     return get_deck(coll, deck_name)
 
 
-def all_decks(coll: collection.Collection) -> Dict[decks.DeckId, DeckDict]:
+def all_decks(coll: collection.Collection) -> Dict[int, DeckDict]:
     """Get a list of all decks in the collection."""
-    raise NotImplementedError
+    decks = {x.id: coll.decks.get(x.id) for x in coll.decks.all_names_and_ids()}  # type: ignore
+    return decks  # type: ignore
 
 
 def has_deck(coll: collection.Collection, name: str) -> bool:

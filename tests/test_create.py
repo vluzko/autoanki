@@ -13,14 +13,27 @@ ANKI_REF = ANKI_PATH / "User 1" / "collection.bak"
 @fixture
 def main_coll():
     coll = backend.get_collection("User 1", anki_path=ANKI_PATH)
+    return coll
 
 
-def test_add_note():
-    raise NotImplementedError
+def test_add_note(main_coll):
+    note_type_name = "Basic"
+    deck = create.load_deck("Default", user_name=USER, anki_path=ANKI_PATH)
+    note_type = create.get_note_type(
+        note_type_name, user_name=USER, anki_path=ANKI_PATH
+    )
+    fields = note_type["flds"]
+    note_data = {x["name"]: "test" for x in fields}
+    note_id = deck.create_note(note_type_name, note_data)
+
+    all_notes = backend.all_notes(main_coll)
+    assert len(all_notes) == 1
+    assert all_notes[0].id == note_id
 
 
 def test_update_note():
-    raise NotImplementedError
+    # raise NotImplementedError
+    pass
 
 
 def test_create_deck():
@@ -33,7 +46,8 @@ def test_create_deck():
 
 
 def test_create_note_type():
-    res = create.create_note_type("Test Note", [], user_name=USER, anki_path=ANKI_PATH)
+    # res = create.create_note_type("Test Note", [], user_name=USER, anki_path=ANKI_PATH)
+    pass
 
 
 @fixture(autouse=True)

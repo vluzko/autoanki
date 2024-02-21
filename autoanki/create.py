@@ -16,6 +16,9 @@ class Deck:
     def __str__(self) -> str:
         return self.name
 
+    def __repr__(self) -> str:
+        return f"Deck({self.name})"
+
     @property
     def id(self) -> int:
         return self._deck["id"]
@@ -43,6 +46,7 @@ class Deck:
         self._collection.add_note(note, self._deck["id"])
         assert self._collection.db is not None
         self._collection.after_note_updates([note.id], False)
+        self.notes.append(note)
         return note.id
 
     def create_note(
@@ -75,6 +79,17 @@ class Deck:
 
     def get_media(self):
         raise NotImplementedError
+
+
+def get_note_type(
+    note_type_name: str,
+    user_name: str = config.DEFAULT_USER,
+    anki_path: Path = config.ANKI_PATH,
+):
+    """Get a note type by name."""
+    collection = backend.get_collection(user_name, anki_path=anki_path)
+    note_type = backend.get_note_type(collection, note_type_name)
+    return note_type
 
 
 def create_note_type(

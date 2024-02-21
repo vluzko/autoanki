@@ -142,7 +142,7 @@ def parse_all_about_birds(url: str):
         images = []
         audio = None
         if main_div is not None:
-            pic_list = main_div.findAll("img")
+            pic_list = main_div.findAll("img")  # type: ignore
             for pic in pic_list:
                 try:
                     caption = pic.attrs["alt"]
@@ -153,16 +153,16 @@ def parse_all_about_birds(url: str):
                 images.append({"caption": caption, "src": large_src})
 
             # Grab audio
-            audio_div = main_div.find("div", {"class": "jp-jplayer"})
+            audio_div = main_div.find("div", {"class": "jp-jplayer"})  # type: ignore
             if audio_div is not None:
-                audio = audio_div.attrs["name"]
+                audio = audio_div.attrs["name"]  # type: ignore
 
         # Grab range map
         range_src = None
         narrow_div = parsed.find("div", {"class": "narrow-content"})
         if narrow_div is not None:
             range_map = narrow_div.find("img")
-            range_src = range_map.attrs["data-interchange"].split(" ")[-2][1:-1]
+            range_src = range_map.attrs["data-interchange"].split(" ")[-2][1:-1]  # type: ignore
         return images, audio, range_src
 
 
