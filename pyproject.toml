@@ -9,7 +9,7 @@ readme = "README.md"
 requires-python = ">=3.12"
 
 dependencies = [
-    "anki==23.12.1",
+    "anki==24.06",
 ]
 
 [project.optional-dependencies]
