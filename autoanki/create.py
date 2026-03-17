@@ -85,7 +85,7 @@ def get_note_type(
     note_type_name: str,
     user_name: str = config.DEFAULT_USER,
     anki_path: Path = config.ANKI_PATH,
-):
+) -> backend.GoodNoteTypeDict:
     """Get a note type by name."""
     collection = backend.get_collection(user_name, anki_path=anki_path)
     note_type = backend.get_note_type(collection, note_type_name)

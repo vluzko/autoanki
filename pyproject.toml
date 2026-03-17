@@ -6,13 +6,7 @@ authors = [
 ]
 description = "Tools for interacting Anki decks."
 readme = "README.md"
-license = { file="LICENSE" }
-requires-python = ">=3.9"
-classifiers = [
-    "Programming Language :: Python :: 3",
-    "License :: OSI Approved :: MIT License",
-    "Operating System :: OS Independent",
-]
+requires-python = ">=3.12"
 
 dependencies = [
     "anki==23.12.1",
@@ -20,28 +14,17 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = [
-    "black>=23.12.1",
-    "flake8>=7.0.0",
-    "mypy>=1.8.0",
-    "pre-commit>=3.6.0",
-    "pytest>=7.4.4",
-    "Sphinx>=7.2.6",
-    "sphinx_rtd_theme>=1.0.0",
-    "types-requests>=2.31.0",
-]
-examples = [
-    "beautifulsoup4==4.12.2",
-    "requests>=2.31.0"
+    "uv>=0.6.0",
+    "pytest>=9.0.2",
+    "pre-commit>=4.5.1",
+    "mypy>=1.19.1",
+    "ruff>=0.15.6",
 ]
 
 [project.urls]
 "Homepage" = "https://github.com/vluzko/autoanki"
 "Bug Tracker" = "https://github.com/vluzko/autoanki/issues"
 
-
 [build-system]
-requires = ["setuptools>=69.0"]
-build-backend = "setuptools.build_meta"
-
-[tool.isort]
-profile = "black"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
