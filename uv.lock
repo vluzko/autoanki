@@ -4,7 +4,7 @@ requires-python = ">=3.12"
 
 [[package]]
 name = "anki"
-version = "23.12.1"
+version = "24.6"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "beautifulsoup4" },
@@ -17,11 +17,11 @@ dependencies = [
     { name = "requests", extra = ["socks"] },
 ]
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/64/09/7cf96b86f2c674479835abb640716b08a3017140ba86df4786a26e77ad77/anki-23.12.1-cp39-abi3-macosx_10_13_x86_64.whl", hash = "sha256:f3d48291b7ce60b72bf9cfbec4dc990d0a9a29f30c5412cc6d30833fe550a652", size = 10240577, upload-time = "2023-12-28T09:06:14.823Z" },
-    { url = "https://files.pythonhosted.org/packages/00/83/30f1bfc9d9bff54f8738dc5fb838cf786e4e4ca083068c4ede439bbce5b0/anki-23.12.1-cp39-abi3-macosx_11_0_arm64.whl", hash = "sha256:59ca12994956777b65efc7e4ea9235d01532b7fa1537173d46e28eb7eba552cd", size = 9681017, upload-time = "2023-12-28T09:06:20.563Z" },
-    { url = "https://files.pythonhosted.org/packages/43/2b/2db277eb15ddf0f8ff575fa2c6d1efc73df85f721a0e1c7bc8644439e5e2/anki-23.12.1-cp39-abi3-manylinux_2_28_x86_64.whl", hash = "sha256:d9676c1595c28d335ef5dc1e60e5eb624f4f1e948a5344dde43374bfd8a98b29", size = 12020777, upload-time = "2023-12-28T09:06:26.342Z" },
-    { url = "https://files.pythonhosted.org/packages/3e/5a/5b6dddcd25ab1dee44fbb50daa52c3f518372ac1477e49e79ba6182350bb/anki-23.12.1-cp39-abi3-manylinux_2_31_aarch64.whl", hash = "sha256:08e807327090ae40a0e5eb331ff60ac9af8f58faa3b46835420ee84a4191c553", size = 11893036, upload-time = "2023-12-28T09:06:32.459Z" },
-    { url = "https://files.pythonhosted.org/packages/e7/d2/aebe87612fdd2aaea76327f0e73fa6d5f6748ffb50d05b74ff9fe3d18f51/anki-23.12.1-cp39-abi3-win_amd64.whl", hash = "sha256:af5e34a94baed0883e1df9de636ec690cfb741eaddfbb788d97db44f4218e074", size = 9810925, upload-time = "2023-12-28T09:06:38.159Z" },
+    { url = "https://files.pythonhosted.org/packages/c7/68/9639d0f6b0f1fb6506ce1410da014318edec20d7060675311d6ce1e26d7d/anki-24.06-cp39-abi3-macosx_10_13_x86_64.whl", hash = "sha256:1f7a6d957a3efd72f45ff671cab8c9d7b7071731a59b50a4a181e18e22273252", size = 11607388, upload-time = "2024-06-07T02:50:55.31Z" },
+    { url = "https://files.pythonhosted.org/packages/b6/46/bf337171269e1d7a0efb012977f104493305779f155af50f7aeb4ea1ad72/anki-24.06-cp39-abi3-macosx_11_0_arm64.whl", hash = "sha256:afb2789b5da1a0e8096d801ef8abd92313ce2c46afcf1073861cd7758e5925f9", size = 11224303, upload-time = "2024-06-07T02:50:59.261Z" },
+    { url = "https://files.pythonhosted.org/packages/99/a6/944b1101b5df1b2e16c6924db72ec8676853425bd3407f3802754dbfe8ac/anki-24.06-cp39-abi3-manylinux_2_28_x86_64.whl", hash = "sha256:a3846b017ea62d86c3271dbc6b36f3a0d9fd98c064d21d93ea62758018df96c5", size = 11279392, upload-time = "2024-06-07T02:51:02.651Z" },
+    { url = "https://files.pythonhosted.org/packages/74/6f/9aea646b5f66badddbcb98c70edb10cd12e6aba7f18354b9435593960e87/anki-24.06-cp39-abi3-manylinux_2_31_aarch64.whl", hash = "sha256:e9fe669cad4ce8b0856b84d2905f3e2d0363550c95618b881d3f5689a9c9c0f1", size = 11131149, upload-time = "2024-06-07T02:51:06.62Z" },
+    { url = "https://files.pythonhosted.org/packages/cc/5d/295ef265cae80999e1065a7dcf526339ed8201e5ee109a103b429fae0512/anki-24.06-cp39-abi3-win_amd64.whl", hash = "sha256:2398789302311e7106d069b43003dcfbfd0c71282ca3fd87957d5d8ff54e2614", size = 9195890, upload-time = "2024-06-07T02:51:10.473Z" },
 ]
 
 [[package]]
@@ -43,7 +43,7 @@ dev = [
 
 [package.metadata]
 requires-dist = [
-    { name = "anki", specifier = "==23.12.1" },
+    { name = "anki", specifier = "==24.6" },
     { name = "mypy", marker = "extra == 'dev'", specifier = ">=1.19.1" },
     { name = "pre-commit", marker = "extra == 'dev'", specifier = ">=4.5.1" },
     { name = "pytest", marker = "extra == 'dev'", specifier = ">=9.0.2" },
@@ -483,11 +483,11 @@ wheels = [
 
 [[package]]
 name = "pygments"
-version = "2.19.2"
+version = "2.20.0"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/b0/77/a5b8c569bf593b0140bde72ea885a803b82086995367bf2037de0159d924/pygments-2.19.2.tar.gz", hash = "sha256:636cb2477cec7f8952536970bc533bc43743542f70392ae026374600add5b887", size = 4968631, upload-time = "2025-06-21T13:39:12.283Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/c3/b2/bc9c9196916376152d655522fdcebac55e66de6603a76a02bca1b6414f6c/pygments-2.20.0.tar.gz", hash = "sha256:6757cd03768053ff99f3039c1a36d6c0aa0b263438fcab17520b30a303a82b5f", size = 4955991, upload-time = "2026-03-29T13:29:33.898Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/c7/21/705964c7812476f378728bdf590ca4b771ec72385c533964653c68e86bdc/pygments-2.19.2-py3-none-any.whl", hash = "sha256:86540386c03d588bb81d44bc3928634ff26449851e99741617ecb9037ee5ec0b", size = 1225217, upload-time = "2025-06-21T13:39:07.939Z" },
+    { url = "https://files.pythonhosted.org/packages/f4/7e/a72dd26f3b0f4f2bf1dd8923c85f7ceb43172af56d63c7383eb62b332364/pygments-2.20.0-py3-none-any.whl", hash = "sha256:81a9e26dd42fd28a23a2d169d86d7ac03b46e2f8b59ed4698fb4785f946d0176", size = 1231151, upload-time = "2026-03-29T13:29:30.038Z" },
 ]
 
 [[package]]
